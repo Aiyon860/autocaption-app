@@ -1,10 +1,10 @@
 import express from "express";
 import cors from "cors";
 import multer from "multer";
-import { generateCaptions } from "./generate.ts";
-import { config, cloudinary } from "./config.ts";
-import { SOCIAL_MEDIA_SYSTEM_PROMPT, PLATFORM_PROMPTS } from "./prompt.ts";
-import { logger } from "./logger.ts";
+import { generateCaptions } from "./generate.js";
+import { config, cloudinary } from "./config.js";
+import { SOCIAL_MEDIA_SYSTEM_PROMPT, PLATFORM_PROMPTS } from "./prompt.js";
+import { logger } from "./logger.js";
 
 const app = express();
 app.use(cors());
@@ -33,16 +33,17 @@ app.post("/api/generate-caption", upload.single("image"), async (req, res) => {
     log.info({ folder: "autocaption" }, "Starting Cloudinary upload");
     const uploadStartTime = Date.now();
 
-    const uploadResult = await new Promise((resolve, reject) => {
+    const uploadResult = await new Promise<{ secure_url: string; public_id: string }>((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(
         { folder: "autocaption" },
         (error, result) => {
           if (error) reject(error);
+          else if (!result) reject(new Error("Upload failed - no result"));
           else resolve(result);
         }
       );
       uploadStream.end(file.buffer);
-    }) as { secure_url: string; public_id: string };
+    });
 
     const uploadDuration = Date.now() - uploadStartTime;
     cloudinaryUrl = uploadResult.secure_url;
@@ -89,6 +90,14 @@ app.post("/api/generate-caption", upload.single("image"), async (req, res) => {
 
     res.status(500).json({ error: error.message });
   }
+});
+
+app.get("/", (req, res) => {
+  res.status(200).json({ status: "ok", timestamp: new Date().toISOString() });
+});
+
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "healthy", timestamp: new Date().toISOString() });
 });
 
 app.listen(3001, () => logger.info("Backend running on port 3001"));

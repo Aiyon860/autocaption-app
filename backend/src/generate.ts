@@ -2,10 +2,8 @@ import OpenAI from "openai";
 import type {
   CaptionResults,
   generateCaptionsFuncProps,
-  ImageCaptionConfig,
-  PlatformPromptType,
-} from "./types.ts";
-import { logger } from "./logger.ts";
+} from "./types.js";
+import { logger } from "./logger.js";
 
 export async function generateCaptions({
   config,
@@ -38,7 +36,7 @@ export async function generateCaptions({
 
   const userPrompt = customPrompt || platformPrompt.all;
 
-  const requestPayload = {
+  const requestPayload: OpenAI.Chat.Completions.ChatCompletionCreateParamsNonStreaming = {
     model: config.modelName,
     messages: [
       { role: "system", content: enhancedSystemPrompt },
@@ -46,7 +44,7 @@ export async function generateCaptions({
         role: "user",
         content: [
           { type: "text", text: userPrompt },
-          { type: "image_url", image_url: { url: imageUrl, details: "low" } },
+          { type: "image_url", image_url: { url: imageUrl, detail: "low" } },
         ],
       },
     ],
