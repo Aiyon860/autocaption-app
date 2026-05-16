@@ -1,0 +1,34 @@
+{
+  "name": "autocaption-app-backend",
+  "version": "1.0.0",
+  "description": "autocaption-app-backend to send request to OpenAI GPT 4o",
+  "license": "ISC",
+  "author": "Daniel Aiyon",
+  "type": "module",
+  "main": "main.ts",
+  "scripts": {
+    "dev": "npx tsx src/main.ts",
+    "start": "npx tsx src/main.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.0.3",
+    "cloudinary": "^2.5.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "multer": "^1.4.5-lts.1",
+    "openai": "latest",
+    "pino": "^9.6.0",
+    "ts-node": "^10.9.2",
+    "typescript": "~5.8.3",
+    "typescript-eslint": "^8.30.1"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/multer": "^1.4.12",
+    "pino-pretty": "^11.3.0",
+    "ts-node-dev": "^2.0.0"
+  }
+}
